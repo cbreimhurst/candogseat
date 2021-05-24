@@ -9,9 +9,12 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^1.11.15",
+    "@trevoreyre/autocomplete-vue": "^2.2.0",
+    "autocomplete.js": "^0.38.0",
     "core-js": "^3.6.5",
     "uuid": "^8.3.2",
     "vue": "^2.6.11",
+    "vue-instantsearch": "^3.7.0",
     "vue-router": "^3.5.1"
   },
   "devDependencies": {
