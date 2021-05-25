@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Title msg="Can Dogs Eat"/>
-   
+   {{articles}}
     <autocomplete 
      :search="search"
     placeholder="Search Wikipedia"
@@ -20,7 +20,8 @@ import Title from './components/Title.vue'
 
 import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = 'https://nowthiamztetfpbgucjm.supabase.co'
-const supabaseKey = process.env.VUE_APP_SUPABASE_KEY;
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMTg3OTEwNCwiZXhwIjoxOTM3NDU1MTA0fQ.s6B6FjNYkO-OXBARp-RL3uxMvWQVwuAYeYeHzduxboY";
+
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 const wikiUrl = 'https://en.wikipedia.org'
