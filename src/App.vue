@@ -1,14 +1,17 @@
 <template>
   <div id="app">
     <Title msg="Can Dogs Eat"/>
-   {{articles}}
-    <autocomplete 
-     :search="search"
-    placeholder="Search Wikipedia"
-    aria-label="Search Wikipedia"
-    :get-result-value="getResultValue"
-    @submit="onSubmit"
-    ></autocomplete>
+    <pre>{{articles}}</pre>
+    <pre>{{error}}</pre>
+
+<input 
+v-model="search" 
+type="text"
+@keyup="searchData"
+>
+{{search}}
+
+    <pre>{{searchDBerror}}</pre>
 
 <p>Built with VueJS, Supabase, Autocomplete, Netlify</p>
   </div>
@@ -24,8 +27,6 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsIm
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-const wikiUrl = 'https://en.wikipedia.org'
-const params = 'action=query&list=search&format=json&origin=*'
 
 export default {
   name: 'App',
@@ -35,6 +36,9 @@ export default {
     data() {
     return {
       articles: [],
+      error: '',
+      search: '',
+      searchDBerror: ''
     }
   },
   async created() {
@@ -43,32 +47,37 @@ export default {
             .from('articles')
             .select("*")
           
-          console.log('error ' + error)
+          this.error = error
           this.articles = articles
       
     },
   methods: {
-    search(input) {
-      const url = `${wikiUrl}/w/api.php?${params}&srsearch=${encodeURI(input)}`
+    async searchData() {
+
+       let input = this.search
+
+
+
+
+          let { data: response, error } = await supabase
+            .from('articles')
+            .select("*")
+            .ilike('title', "%" + input + "%")
+
+          if (error != null) {
+            this.searchDBerror = 'error ' + error
+          } else {
+            this.searchDBerror = ""
+          }
+          this.articles = response
+
+  
  
-      return new Promise((resolve) => {
-        if (input.length < 3) {
-          return resolve([])
-        }
- 
-        fetch(url)
-          .then((response) => response.json())
-          .then((data) => {
-            resolve(data.query.search)
-          })
-      })
+
+
+
     },
-    getResultValue(result) {
-      return result.title
-    },
-    onSubmit(result) {
-      window.open(`${wikiUrl}/wiki/${encodeURI(result.title)}`)
-    },
+
   },
 
 }
@@ -91,5 +100,8 @@ export default {
 .autocomplete {
   max-width: 500px;
   margin: 2rem auto;
+}
+pre {
+  text-align: left;
 }
 </style>
